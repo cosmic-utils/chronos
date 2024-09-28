@@ -50,7 +50,7 @@ impl Application for AppModel {
     type Message = Message;
 
     /// Unique identifier in RDNN (reverse domain name notation) format.
-    const APP_ID: &'static str = "com.example.CosmicAppTemplate";
+    const APP_ID: &'static str = "com.example.Cronos";
 
     fn core(&self) -> &Core {
         &self.core
@@ -62,6 +62,7 @@ impl Application for AppModel {
 
     /// Initializes the application with any given flags and startup commands.
     fn init(core: Core, _flags: Self::Flags) -> (Self, Command<Self::Message>) {
+        log::info!("test");
         // Create a nav bar with three page items.
         let mut nav = nav_bar::Model::default();
 

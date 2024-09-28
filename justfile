@@ -1,5 +1,5 @@
-name := 'cosmic-app-template'
-appid := 'com.example.CosmicAppTemplate'
+name := 'cronos'
+appid := 'com.example.Cronos'
 
 rootdir := ''
 prefix := '/usr'
@@ -52,7 +52,7 @@ check-json: (check '--message-format=json')
 
 # Run the application for testing purposes
 run *args:
-    env RUST_BACKTRACE=full cargo run --release {{args}}
+    env RUST_LOG=cronos=info env RUST_BACKTRACE=full cargo run --release {{args}}
 
 # Installs files
 install:
