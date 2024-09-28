@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: {{LICENSE}}
 
 use crate::config::Config;
-use crate::fl;
+use crate::core::nav::NavPage;
+use crate::{fl, pages};
 use cosmic::app::{Command, Core};
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
 use cosmic::iced::alignment::{Horizontal, Vertical};
@@ -27,6 +28,9 @@ pub struct AppModel {
     key_binds: HashMap<menu::KeyBind, MenuAction>,
     // Configuration data that persists between application runs.
     config: Config,
+
+    pub pomodoro: pages::pomodoro::Pomodoro,
+    pub settings: pages::settings::Settings,
 }
 
 /// Messages emitted by the application and its widgets.
@@ -36,6 +40,10 @@ pub enum Message {
     SubscriptionChannel,
     ToggleContextPage(ContextPage),
     UpdateConfig(Config),
+
+    // pages
+    Pomodoro(pages::pomodoro::PomodoroMessage),
+    Settings(pages::settings::SettingsMessage),
 }
 
 /// Create a COSMIC application from the app model
@@ -66,21 +74,18 @@ impl Application for AppModel {
         // Create a nav bar with three page items.
         let mut nav = nav_bar::Model::default();
 
-        nav.insert()
-            .text(fl!("page-id", num = 1))
-            .data::<Page>(Page::Page1)
-            .icon(icon::from_name("applications-science-symbolic"))
-            .activate();
+        for &nav_page in NavPage::all() {
+            let id = nav
+                .insert()
+                .icon(nav_page.icon())
+                .text(nav_page.title())
+                .data::<NavPage>(nav_page)
+                .id();
 
-        nav.insert()
-            .text(fl!("page-id", num = 2))
-            .data::<Page>(Page::Page2)
-            .icon(icon::from_name("applications-system-symbolic"));
-
-        nav.insert()
-            .text(fl!("page-id", num = 3))
-            .data::<Page>(Page::Page3)
-            .icon(icon::from_name("applications-games-symbolic"));
+            if nav_page == NavPage::default() {
+                nav.activate(id);
+            }
+        }
 
         // Construct the app model with the runtime's core.
         let mut app = AppModel {
@@ -101,6 +106,8 @@ impl Application for AppModel {
                     }
                 })
                 .unwrap_or_default(),
+            pomodoro: pages::pomodoro::Pomodoro::default(),
+            settings: pages::settings::Settings::default(),
         };
 
         // Create a startup command that sets the window title.
@@ -143,7 +150,7 @@ impl Application for AppModel {
     /// Application events will be processed through the view. Any messages emitted by
     /// events received by widgets will be passed to the update method.
     fn view(&self) -> Element<Self::Message> {
-        widget::text::title1(fl!("welcome"))
+        widget::text::title1(fl!("app-title"))
             .apply(widget::container)
             .width(Length::Fill)
             .height(Length::Fill)
@@ -189,6 +196,7 @@ impl Application for AppModel {
     /// Commands may be returned for asynchronous execution of code in the background
     /// on the application's async runtime.
     fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
+        let mut commands = vec![];
         match message {
             Message::OpenRepositoryUrl => {
                 _ = open::that_detached(REPOSITORY);
@@ -215,8 +223,18 @@ impl Application for AppModel {
             Message::UpdateConfig(config) => {
                 self.config = config;
             }
+            Message::Pomodoro(pomodoro_message) => commands.push(
+                self.pomodoro
+                    .update(pomodoro_message)
+                    .map(cosmic::app::Message::App),
+            ),
+            Message::Settings(settings_message) => commands.push(
+                self.settings
+                    .update(settings_message)
+                    .map(cosmic::app::Message::App),
+            ),
         }
-        Command::none()
+        Command::batch(commands)
     }
 
     /// Called when a nav item is selected.

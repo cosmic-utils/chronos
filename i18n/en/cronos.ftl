@@ -1,5 +1,7 @@
-app-title = COSMIC App Template
+app-title = Cronos
 about = About
 view = View
-welcome = Welcome to COSMIC! ✨
-page-id = Page { $num }
+
+pomodoro = Pomodoro
+
+settings = Settings
