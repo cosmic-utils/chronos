@@ -150,12 +150,15 @@ impl Application for AppModel {
     /// Application events will be processed through the view. Any messages emitted by
     /// events received by widgets will be passed to the update method.
     fn view(&self) -> Element<Self::Message> {
-        widget::text::title1(fl!("app-title"))
-            .apply(widget::container)
+        let spacing = cosmic::theme::active().cosmic().spacing;
+        let entity = self.nav.active();
+        let nav_page = self.nav.data::<NavPage>(entity).unwrap_or_default();
+
+        widget::column::with_children(vec![nav_page.view(self)])
+            .padding(spacing.space_xs)
             .width(Length::Fill)
             .height(Length::Fill)
-            .align_x(Horizontal::Center)
-            .align_y(Vertical::Center)
+            .align_items(Alignment::Center)
             .into()
     }
 
