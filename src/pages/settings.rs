@@ -3,9 +3,8 @@ use cosmic::{
     widget::{self, spin_button},
     Command, Element,
 };
-use fraction::Decimal;
 
-use crate::fl;
+use crate::{config::Config, fl};
 
 #[derive(Debug, Clone)]
 pub enum SettingsMessage {
@@ -26,12 +25,13 @@ pub struct Settings {
 impl Default for Settings {
     // Initialize default
     fn default() -> Self {
+        let config = Config::load().1;
         Self {
-            timer_duration_value: 0.,
-            pause_duration: 0.,
-            long_pause_duration: 0.,
-            pomodoro_before_long_pause: 4,
-            pomodoro_before_long_pause_str: "4".to_string(),
+            timer_duration_value: config.timer_duration as f32,
+            pause_duration: config.pause_duration as f32,
+            long_pause_duration: config.long_pause_duration as f32,
+            pomodoro_before_long_pause: config.pomodoro_before_long_pause,
+            pomodoro_before_long_pause_str: config.pomodoro_before_long_pause.to_string(),
         }
     }
 }
@@ -143,13 +143,10 @@ impl Settings {
                         .push(
                             widget::row()
                                 .push(widget::text::text(fl!("pomodoro-before-long-pause")))
-                                .push(
-                                    //TODO il bottone che aumenta e diminuisce un numero
-                                    widget::spin_button(
-                                        &self.pomodoro_before_long_pause_str,
-                                        SettingsMessage::PomodoroBeforeLongPauseChanged,
-                                    ),
-                                ),
+                                .push(widget::spin_button(
+                                    &self.pomodoro_before_long_pause_str,
+                                    SettingsMessage::PomodoroBeforeLongPauseChanged,
+                                )),
                         ),
                 ),
             )
@@ -163,20 +160,26 @@ impl Settings {
         match message {
             SettingsMessage::TimerDurationChanged(value) => {
                 self.timer_duration_value = value;
-                //TODO store in settings
+                let mut config = Config::load();
+                config
+                    .1
+                    .set_timer_duration(&config.0.unwrap(), self.timer_duration_value as u32);
             }
             SettingsMessage::PauseDurationChanged(value) => {
                 self.pause_duration = value;
-                //TODO store in settings
+                let mut config = Config::load();
+                config
+                    .1
+                    .set_pause_duration(&config.0.unwrap(), self.pause_duration as u32);
             }
             SettingsMessage::LongPauseDurationChanged(value) => {
                 self.long_pause_duration = value;
-                //TODO store in settings
+                let mut config = Config::load();
+                config
+                    .1
+                    .set_long_pause_duration(&config.0.unwrap(), self.long_pause_duration as u32);
             }
             SettingsMessage::PomodoroBeforeLongPauseChanged(message) => {
-                //TODO aggiungere il controllo che non deve scendere sotto lo zero (o sotto l'uno?)
-                // poi si deve rendere editabile senza premener epiu e meno
-                // impostare il limite anche in altezza? non oltre 10 per esempio?
                 match message {
                     spin_button::Message::Increment => {
                         if self.pomodoro_before_long_pause < 15 {
@@ -190,6 +193,11 @@ impl Settings {
                     }
                 }
                 self.pomodoro_before_long_pause_str = self.pomodoro_before_long_pause.to_string();
+                let mut config = Config::load();
+                config.1.set_pomodoro_before_long_pause(
+                    &config.0.unwrap(),
+                    self.pomodoro_before_long_pause as u32,
+                );
             }
         }
         Command::batch(commands)

@@ -1185,7 +1185,6 @@ name = "cronos"
 version = "0.1.0"
 dependencies = [
  "env_logger",
- "fraction 0.14.0",
  "futures-util",
  "i18n-embed",
  "i18n-embed-fl",
@@ -1836,16 +1835,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e13624c2627564efccf4934284bdd98cbaa14e79b0b5a141218e507b3a823456"
 dependencies = [
  "percent-encoding",
-]
-
-[[package]]
-name = "fraction"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "59a78dd758a47a7305478e0e054f9fde4e983b9f9eccda162bf7ca03b79e9d40"
-dependencies = [
- "lazy_static",
- "num",
 ]
 
 [[package]]
@@ -2839,7 +2828,7 @@ dependencies = [
  "cosmic-theme",
  "css-color",
  "derive_setters",
- "fraction 0.15.3",
+ "fraction",
  "freedesktop-icons",
  "iced",
  "iced_core",

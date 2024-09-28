@@ -13,13 +13,19 @@ pub const CONFIG_VERSION: u64 = 1;
 
 #[derive(Clone, CosmicConfigEntry, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Config {
-    pub demo: String,
+    pub timer_duration: u32,
+    pub pause_duration: u32,
+    pub long_pause_duration: u32,
+    pub pomodoro_before_long_pause: u32
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
-            demo: "".to_string(),
+            timer_duration: 25,
+            pause_duration: 5,
+            long_pause_duration: 15,
+            pomodoro_before_long_pause: 4
         }
     }
 }

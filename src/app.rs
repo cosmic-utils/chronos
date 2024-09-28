@@ -70,7 +70,6 @@ impl Application for AppModel {
 
     /// Initializes the application with any given flags and startup commands.
     fn init(core: Core, _flags: Self::Flags) -> (Self, Command<Self::Message>) {
-        log::info!("test");
         // Create a nav bar with three page items.
         let mut nav = nav_bar::Model::default();
 
