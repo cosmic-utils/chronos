@@ -142,11 +142,20 @@ impl Settings {
                         )
                         .push(
                             widget::row()
-                                .push(widget::text::text(fl!("pomodoro-before-long-pause")))
-                                .push(widget::spin_button(
-                                    &self.pomodoro_before_long_pause_str,
-                                    SettingsMessage::PomodoroBeforeLongPauseChanged,
-                                )),
+                                .push(
+                                    widget::column()
+                                        .push(widget::text::text(fl!("pomodoro-before-long-pause")))
+                                        .width(Length::Fill),
+                                )
+                                .push(
+                                    widget::column()
+                                        .push(widget::spin_button(
+                                            &self.pomodoro_before_long_pause_str,
+                                            SettingsMessage::PomodoroBeforeLongPauseChanged,
+                                        ))
+                                        .width(Length::Fill)
+                                        .align_items(iced::Alignment::End),
+                                ),
                         ),
                 ),
             )
