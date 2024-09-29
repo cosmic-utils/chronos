@@ -5,15 +5,15 @@ use crate::core::nav::NavPage;
 use crate::{fl, pages};
 use cosmic::app::{Command, Core};
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
-use cosmic::iced::alignment::{Horizontal, Vertical};
 use cosmic::iced::{Alignment, Length, Subscription};
-use cosmic::widget::{self, icon, menu, nav_bar};
-use cosmic::{cosmic_theme, theme, Application, ApplicationExt, Apply, Element};
+use cosmic::widget::{self, menu, nav_bar};
+use cosmic::{cosmic_theme, theme, Application, ApplicationExt, Element};
 use futures_util::SinkExt;
 use std::collections::HashMap;
 
 const REPOSITORY: &str = "https://github.com/pop-os/cosmic-app-template";
-const APP_ICON: &[u8] = include_bytes!("../res/icons/hicolor/scalable/apps/icon.svg");
+const APP_ICON: &[u8] =
+    include_bytes!("../res/icons/hicolor/scalable/apps/com.github.francesco-gaglione.Cronos.svg");
 
 /// The application model stores app-specific state used to describe its interface and
 /// drive its logic.
@@ -58,7 +58,7 @@ impl Application for AppModel {
     type Message = Message;
 
     /// Unique identifier in RDNN (reverse domain name notation) format.
-    const APP_ID: &'static str = "com.example.Cronos";
+    const APP_ID: &'static str = "com.github.francesco-gaglione.Cronos";
 
     fn core(&self) -> &Core {
         &self.core

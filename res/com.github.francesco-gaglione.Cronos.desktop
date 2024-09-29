@@ -1,10 +1,10 @@
 [Desktop Entry]
-Name={{APP_NAME}}
-Exec={{APP_BINARY}} %F
+Name=Cronos
+Exec=cronos %F
 Terminal=false
 Type=Application
 StartupNotify=true
-Icon={{APP_ID}}
+Icon=com.github.francesco-gaglione.Cronos
 Categories=COSMIC;
 Keywords=
 MimeType=

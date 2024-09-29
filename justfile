@@ -1,5 +1,5 @@
 name := 'cronos'
-appid := 'com.example.Cronos'
+appid := 'com.github.francesco-gaglione.Cronos'
 
 rootdir := ''
 prefix := '/usr'
@@ -16,7 +16,7 @@ desktop-dst := clean(rootdir / prefix) / 'share' / 'applications' / desktop
 icons-src := 'res' / 'icons' / 'hicolor'
 icons-dst := clean(rootdir / prefix) / 'share' / 'icons' / 'hicolor'
 
-icon-svg-src := icons-src / 'scalable' / 'apps' / 'icon.svg'
+icon-svg-src := icons-src / 'scalable' / 'apps' / appid + '.svg'
 icon-svg-dst := icons-dst / 'scalable' / 'apps' / appid + '.svg'
 
 # Default recipe which runs `just build-release`
@@ -57,7 +57,7 @@ run *args:
 # Installs files
 install:
     install -Dm0755 {{bin-src}} {{bin-dst}}
-    install -Dm0644 res/app.desktop {{desktop-dst}}
+    install -Dm0644 res/{{appid}}.desktop {{desktop-dst}}
     install -Dm0644 {{icon-svg-src}} {{icon-svg-dst}}
 
 # Uninstalls installed files
@@ -87,4 +87,4 @@ vendor:
 # Extracts vendored dependencies
 vendor-extract:
     rm -rf vendor
-    tar pxf vendor.tar
+    tar pxf vendor.tar   tar pxf vendor.tar
