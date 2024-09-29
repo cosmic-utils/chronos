@@ -5,11 +5,12 @@ use crate::core::nav::NavPage;
 use crate::{fl, pages};
 use cosmic::app::{Command, Core};
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
+use cosmic::iced::time;
 use cosmic::iced::{Alignment, Length, Subscription};
 use cosmic::widget::{self, menu, nav_bar};
 use cosmic::{cosmic_theme, theme, Application, ApplicationExt, Element};
-use futures_util::SinkExt;
 use std::collections::HashMap;
+use std::time::{Duration, Instant};
 
 const REPOSITORY: &str = "https://github.com/pop-os/cosmic-app-template";
 const APP_ICON: &[u8] =
@@ -31,6 +32,8 @@ pub struct AppModel {
 
     pub pomodoro: pages::pomodoro::Pomodoro,
     pub settings: pages::settings::Settings,
+
+    pomodoro_tick_state: PomodoroTickState,
 }
 
 /// Messages emitted by the application and its widgets.
@@ -44,6 +47,19 @@ pub enum Message {
     // pages
     Pomodoro(pages::pomodoro::PomodoroMessage),
     Settings(pages::settings::SettingsMessage),
+
+    PomodoroTick,
+    StartPomodoroTimer,
+    PausePomodoroTimer,
+}
+
+#[derive(Default)]
+enum PomodoroTickState {
+    #[default]
+    Idle,
+    Ticking {
+        last_tick: Instant,
+    },
 }
 
 /// Create a COSMIC application from the app model
@@ -107,6 +123,7 @@ impl Application for AppModel {
                 .unwrap_or_default(),
             pomodoro: pages::pomodoro::Pomodoro::default(),
             settings: pages::settings::Settings::default(),
+            pomodoro_tick_state: PomodoroTickState::Idle,
         };
 
         // Create a startup command that sets the window title.
@@ -167,30 +184,13 @@ impl Application for AppModel {
     /// emit messages to the application through a channel. They are started at the
     /// beginning of the application, and persist through its lifetime.
     fn subscription(&self) -> Subscription<Self::Message> {
-        struct MySubscription;
-
-        Subscription::batch(vec![
-            // Create a subscription which emits updates through a channel.
-            cosmic::iced::subscription::channel(
-                std::any::TypeId::of::<MySubscription>(),
-                4,
-                move |mut channel| async move {
-                    _ = channel.send(Message::SubscriptionChannel).await;
-
-                    futures_util::future::pending().await
-                },
-            ),
-            // Watch for application configuration changes.
-            self.core()
-                .watch_config::<Config>(Self::APP_ID)
-                .map(|update| {
-                    // for why in update.errors {
-                    //     tracing::error!(?why, "app config error");
-                    // }
-
-                    Message::UpdateConfig(update.config)
-                }),
-        ])
+        let tick = match self.pomodoro_tick_state {
+            PomodoroTickState::Idle => Subscription::none(),
+            PomodoroTickState::Ticking { .. } => {
+                time::every(Duration::from_secs(1)).map(|_instant| Message::PomodoroTick)
+            }
+        };
+        Subscription::batch(vec![tick])
     }
 
     /// Handles messages emitted by the application and its widgets.
@@ -235,6 +235,21 @@ impl Application for AppModel {
                     .update(settings_message)
                     .map(cosmic::app::Message::App),
             ),
+            Message::PomodoroTick => {
+                commands.push(
+                    self.pomodoro
+                        .update(pages::pomodoro::PomodoroMessage::PomodoroTick)
+                        .map(cosmic::app::Message::App),
+                );
+            }
+            Message::StartPomodoroTimer => {
+                self.pomodoro_tick_state = PomodoroTickState::Ticking {
+                    last_tick: Instant::now(),
+                };
+            }
+            Message::PausePomodoroTimer => {
+                self.pomodoro_tick_state = PomodoroTickState::Idle;
+            }
         }
         Command::batch(commands)
     }
@@ -281,13 +296,6 @@ impl AppModel {
 
         self.set_window_title(window_title)
     }
-}
-
-/// The page to display in the application.
-pub enum Page {
-    Page1,
-    Page2,
-    Page3,
 }
 
 /// The context page to display in the context drawer.
