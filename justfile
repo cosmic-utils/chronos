@@ -1,5 +1,5 @@
 name := 'chronos'
-appid := 'com.github.francesco-gaglione.Chronos'
+appid := 'com.github.cosmic-utils.Chronos'
 version := '0.1.0'
 
 rootdir := ''
@@ -91,6 +91,10 @@ package-deb:
     mv debian.deb {{name}}_{{version}}_amd64.deb
 
     rm -rf debian
+    
+package-flatpak:
+    flatpak-builder --force-clean --repo=repo build-dir com.github.cosmic-utils.Chronos.json
+    flatpak build-bundle repo chronos.flatpak com.github.cosmic-utils.Chronos 0.1.0 --arch=x86_64
 
 # Vendor dependencies locally
 vendor:

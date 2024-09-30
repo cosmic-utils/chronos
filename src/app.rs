@@ -74,7 +74,7 @@ impl Application for AppModel {
     type Message = Message;
 
     /// Unique identifier in RDNN (reverse domain name notation) format.
-    const APP_ID: &'static str = "com.github.francesco-gaglione.Chronos";
+    const APP_ID: &'static str = "com.github.cosmic-utils.Chronos";
 
     fn core(&self) -> &Core {
         &self.core
