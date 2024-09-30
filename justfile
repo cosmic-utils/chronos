@@ -1,5 +1,6 @@
 name := 'cronos'
 appid := 'com.github.francesco-gaglione.Cronos'
+version := '0.1.0-alpha.1'
 
 rootdir := ''
 prefix := '/usr'
@@ -63,6 +64,33 @@ install:
 # Uninstalls installed files
 uninstall:
     rm {{bin-dst}} {{desktop-dst}} {{icon-svg-dst}}
+
+package-deb:
+    mkdir -p debian/usr/bin
+    mkdir -p debian/usr/share/applications
+    mkdir -p debian/usr/share/icons/hicolor/scalable/apps
+    mkdir -p debian/DEBIAN
+
+    install -Dm0755 {{bin-src}} debian{{bin-dst}}
+    install -Dm0644 res/{{appid}}.desktop debian{{desktop-dst}}
+    install -Dm0644 {{icon-svg-src}} debian{{icon-svg-dst}}
+
+    echo "Package: {{name}}" > debian/DEBIAN/control
+    echo "Version: {{version}}" >> debian/DEBIAN/control
+    echo "Section: utils" >> debian/DEBIAN/control
+    echo "Priority: optional" >> debian/DEBIAN/control
+    echo "Architecture: amd64" >> debian/DEBIAN/control
+    echo "Maintainer: Francesco Pio Gaglione <francesco.gaglione.p@gmail.com>" >> debian/DEBIAN/control
+    echo "Description: todo description" >> debian/DEBIAN/control
+
+    chmod 755 debian/DEBIAN
+    chmod 644 debian/DEBIAN/control
+
+    dpkg-deb --build debian
+
+    mv debian.deb {{name}}_{{version}}_amd64.deb
+
+    rm -rf debian
 
 # Vendor dependencies locally
 vendor:
