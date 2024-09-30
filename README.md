@@ -48,7 +48,9 @@ Contributions are welcome! If you’d like to contribute to the project, please 
 
 ## Future Goals
 
-*Placeholder for future goals*
+1. System notifications
+2. Notification settings
+3. Activity history
 
 ## License
 
