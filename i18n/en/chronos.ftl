@@ -17,3 +17,6 @@ pause = Pause
 pomodoro-started = Pomodoro started
 pomodoro-started-des = Your pomodoro session started
 pomodoro-paused = Pomodoro paused
+pomodoro-paused-des = Your pomodoro session has been paused
+pomodoro-stopped = Pomodoro stopped
+pomodoro-stopped-des = Pomodoro has been stopped and resetted
