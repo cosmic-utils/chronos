@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="./res/icons/hicolor/scalable/apps/com.github.francesco-gaglione.Cronos.svg" alt="Logo" width="200px">
+  <img src="./res/icons/hicolor/scalable/apps/com.github.francesco-gaglione.Chronos.svg" alt="Logo" width="200px">
 </p>
 
-# Cronos
+# Chronos
 
-**Cronos** is a simple and intuitive Pomodoro timer for Linux, built using **libcosmic**, the libraries underlying the **Cosmic** desktop environment. It is designed to help you enhance your productivity by effectively managing work time and breaks using the Pomodoro technique.
+**Chronos** is a simple and intuitive Pomodoro timer for Linux, built using **libcosmic**, the libraries underlying the **Cosmic** desktop environment. It is designed to help you enhance your productivity by effectively managing work time and breaks using the Pomodoro technique.
 
 ## Features
 
@@ -18,7 +18,7 @@
 
 ## Configuration
 
-The **Cronos** settings allow you to customize:
+The **Chronos** settings allow you to customize:
 
 - Duration of work sessions.
 - Duration of short and long breaks.
@@ -28,7 +28,7 @@ All settings are accessible through the user interface.
 
 ## Screenshots
 
-Here’s a preview of **Cronos**:
+Here’s a preview of **Chronos**:
 
 ### Pomodoro
 ![Screenshot of the main page](./res/screenshots/main_page.png)

@@ -14,7 +14,7 @@ use std::time::{Duration, Instant};
 
 const REPOSITORY: &str = "https://github.com/pop-os/cosmic-app-template";
 const APP_ICON: &[u8] =
-    include_bytes!("../res/icons/hicolor/scalable/apps/com.github.francesco-gaglione.Cronos.svg");
+    include_bytes!("../res/icons/hicolor/scalable/apps/com.github.francesco-gaglione.Chronos.svg");
 
 /// The application model stores app-specific state used to describe its interface and
 /// drive its logic.
@@ -74,7 +74,7 @@ impl Application for AppModel {
     type Message = Message;
 
     /// Unique identifier in RDNN (reverse domain name notation) format.
-    const APP_ID: &'static str = "com.github.francesco-gaglione.Cronos";
+    const APP_ID: &'static str = "com.github.francesco-gaglione.Chronos";
 
     fn core(&self) -> &Core {
         &self.core

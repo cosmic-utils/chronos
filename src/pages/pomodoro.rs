@@ -3,6 +3,7 @@ use cosmic::{
     widget::{self, icon},
     Command, Element,
 };
+use notify_rust::Notification;
 
 use crate::{app::Message, config::Config, fl};
 
@@ -135,6 +136,12 @@ impl Pomodoro {
             PomodoroMessage::StartPomodoro => {
                 commands.push(Command::perform(async {}, |_| Message::StartPomodoroTimer));
                 self.in_action = true;
+                let res = Notification::new()
+                    .summary(&fl!("pomodoro-started"))
+                    .body(&fl!("pomodoro-started-des"))
+                    .appname("Chronos")
+                    .show();
+                log::info!("notification result is ok: {:?}", res.is_ok());
             }
             PomodoroMessage::PausePomodoro => {
                 commands.push(Command::perform(async {}, |_| Message::PausePomodoroTimer));

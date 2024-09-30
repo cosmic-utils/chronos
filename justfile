@@ -1,5 +1,5 @@
-name := 'cronos'
-appid := 'com.github.francesco-gaglione.Cronos'
+name := 'chronos'
+appid := 'com.github.francesco-gaglione.Chronos'
 version := '0.1.0-alpha.1'
 
 rootdir := ''
@@ -53,7 +53,7 @@ check-json: (check '--message-format=json')
 
 # Run the application for testing purposes
 run *args:
-    env RUST_LOG=cronos=info env RUST_BACKTRACE=full cargo run --release {{args}}
+    env RUST_LOG=chronos=info env RUST_BACKTRACE=full cargo run --release {{args}}
 
 # Installs files
 install:

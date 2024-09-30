@@ -1,4 +1,4 @@
-app-title = Cronos
+app-title = Chronos
 about = About
 view = View
 
@@ -12,3 +12,8 @@ pause-duration = Pause duration
 long-pause-duration = Long pause duration
 pomodoro-before-long-pause = Pomodoro vefore long pause
 pause = Pause
+
+// notifications
+pomodoro-started = Pomodoro started
+pomodoro-started-des = Your pomodoro session started
+pomodoro-paused = Pomodoro paused
