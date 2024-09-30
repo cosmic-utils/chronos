@@ -31,10 +31,10 @@ All settings are accessible through the user interface.
 Here’s a preview of **Chronos**:
 
 ### Pomodoro
-![Screenshot of the main page](./res/screenshots/main_page.png)
+![Screenshot of the main page](./screenshots/pomodoro-page.png)
 
 ### Settings
-![Screenshot of the settings page](./res/screenshots/settings_page.png)
+![Screenshot of the settings page](./screenshots/pomodoro-settings.png)
 
 ## Contributing
 
