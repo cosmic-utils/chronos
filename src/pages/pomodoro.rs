@@ -145,9 +145,20 @@ impl Pomodoro {
             }
             PomodoroMessage::PausePomodoro => {
                 commands.push(Command::perform(async {}, |_| Message::PausePomodoroTimer));
+                let _ = Notification::new()
+                    .summary(&fl!("pomodoro-paused"))
+                    .body(&fl!("pomodoro-paused-des"))
+                    .appname("Chronos")
+                    .show();
                 self.in_action = false;
             }
             PomodoroMessage::ResetPomodoro => {
+                let _ = Notification::new()
+                    .summary(&fl!("pomodoro-stopped"))
+                    .body(&fl!("pomodoro-stopped-des"))
+                    .appname("Chronos")
+                    .show();
+
                 self.slider_value = self.slider_max_value;
             }
         }
