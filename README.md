@@ -14,6 +14,16 @@
 
 ## Installation
 
+The project supports three installation modes:
+
+1. **.deb**: Download the .deb package from the GitHub repository and install it using your system's package manager.
+
+### Installation from Source
+
+#### Steps
+
+To install the application from source, follow these steps:
+
 ```bash
 # Clone the repository
 git clone https://github.com/cosmic-utils/Chronos
@@ -29,15 +39,6 @@ sudo just install
 ```
 
 ## Configuration
-
-The project supports three installation modes:
-1. **.deb**: Download the .deb package from the GitHub repository and install it using your system's package manager.
-
-### Installation from Source
-
-#### Steps
-
-To install the application from source, follow these steps:
 
 The **Chronos** settings allow you to customize:
 
