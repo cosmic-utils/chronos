@@ -14,6 +14,9 @@
     "--talk-name=com.system76.CosmicSettingsDaemon",
     "--filesystem=xdg-config/cosmic:ro"
   ],
+  "build-options": {
+    "append-path": "/usr/lib/sdk/rust-stable/bin"
+  },
   "modules": [
     {
       "name": "chronos",
@@ -26,14 +29,16 @@
       "build-commands": [
         "cargo --offline fetch --manifest-path Cargo.toml --verbose",
         "cargo --offline build --release --verbose",
-        "install -Dm0755 target/release/chronos /app/bin/chronos",
-        "install -Dm0644 res/com.github.cosmic-utils.Chronos.desktop /app/share/applications/com.github.cosmic_utils.Chronos.desktop",
-        "install -Dm0644 res/icons/hicolor/scalable/apps/com.github.cosmic-utils.Chronos.svg /app/share/icons/hicolor/scalable/apps/com.github.cosmic_utils.Chronos.svg"
+        "install -Dm0755 ./target/release/chronos /app/bin/chronos",
+        "install -Dm0644 ./res/com.github.cosmic-utils.Chronos.desktop /app/share/applications/com.github.cosmic_utils.Chronos.desktop",
+        "install -Dm0644 ./res/com.github.cosmic-utils.Chronos.metainfo.xml /app/share/metainfo/com.github.cosmic_utils.Chronos.metainfo.xml",
+        "install -Dm0644 ./res/icons/hicolor/scalable/apps/com.github.cosmic-utils.Chronos.svg /app/share/icons/hicolor/scalable/apps/com.github.cosmic_utils.Chronos.svg"
       ],
       "sources": [
         {
-          "type": "dir",
-          "path": "./"
+          "type": "git",
+          "url": "https://github.com/cosmic-utils/chronos.git",
+          "commit": "60c8b77b265307af2ad000d011ce18549547b24a"
         },
         "cargo-sources.json"
       ]
