@@ -14,7 +14,19 @@
 
 ## Installation
 
-*Placeholder for installation instructions*
+```bash
+# Clone the repository
+git clone https://github.com/cosmic-utils/Chronos
+
+# Change directory to the project folder
+cd Chronos
+
+# Build Release version (for much better performance)
+just build-release
+
+# Install
+sudo just install
+```
 
 ## Configuration
 
@@ -31,9 +43,11 @@ All settings are accessible through the user interface.
 Here’s a preview of **Chronos**:
 
 ### Pomodoro
+
 ![Screenshot of the main page](./screenshots/pomodoro-page.png)
 
 ### Settings
+
 ![Screenshot of the settings page](./screenshots/pomodoro-settings.png)
 
 ## Contributing
