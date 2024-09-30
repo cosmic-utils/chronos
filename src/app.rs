@@ -12,9 +12,9 @@ use cosmic::{cosmic_theme, theme, Application, ApplicationExt, Element};
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
-const REPOSITORY: &str = "https://github.com/pop-os/cosmic-app-template";
+const REPOSITORY: &str = "https://github.com/cosmic-utils/Chronos";
 const APP_ICON: &[u8] =
-    include_bytes!("../res/icons/hicolor/scalable/apps/com.github.francesco-gaglione.Chronos.svg");
+    include_bytes!("../res/icons/hicolor/scalable/apps/com.github.cosmic-utils.Chronos.svg");
 
 /// The application model stores app-specific state used to describe its interface and
 /// drive its logic.
