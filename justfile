@@ -93,8 +93,8 @@ package-deb:
     rm -rf debian
     
 package-flatpak:
-    flatpak-builder --force-clean --repo=repo build-dir com.github.cosmic-utils.Chronos.json
-    flatpak build-bundle repo chronos.flatpak com.github.cosmic-utils.Chronos 0.1.0 --arch=x86_64
+    flatpak-builder --force-clean --repo=repo build-dir com.github.cosmic-utils.Chronos.json --verbose
+    flatpak build-bundle repo chronos.flatpak com.github.cosmic-utils.Chronos {{version}} --arch=x86_64
 
 # Vendor dependencies locally
 vendor:
