@@ -11,12 +11,12 @@
   <url type="homepage">https://github.com/cosmic-utils/Chronos</url>
   <url type="bugtracker">https://github.com/cosmic-utils/Chronos/issues</url>
   <name>Chronos</name>
-  <summary>Chronos is a simple and intuitive Pomodoro timer for Linux.</summary>
+  <summary>Chronos is a simple and intuitive Pomodoro timer for Linux</summary>
   <description>
     <p>Chronos is a simple and intuitive Pomodoro timer for Linux that helps users manage their time efficiently and effectively, making it easier to focus on tasks and take breaks at regular intervals.</p>
   </description>
   <launchable type="desktop-id">com.github.cosmic_utils.Chronos.desktop</launchable>
-  <icon type="remote" height="256" width="256">https://raw.githubusercontent.com/cosmic-utils/Chronos/main/res/icons/hicolor/scalable/apps/com.github.cosmic-utils.Chronos.svg</icon>
+  <icon type="remote" height="256" width="256">https://raw.githubusercontent.com/cosmic-utils/Chronos/main/res/icons/hicolor/scalable/apps/Chronos.svg</icon>
   <screenshots>
      <screenshot type="default">
        <image>https://raw.githubusercontent.com/cosmic-utils/Chronos/main/screenshots/pomodoro-page.png</image>
@@ -36,9 +36,6 @@
       <url type="details">https://github.com/cosmic-utils/Chronos/releases/tag/v0.1.0</url>
       <description>
         <p>v0.1.0</p>
-          <ul>
-            <li>Full Changelog: https://github.com/francesco-gaglione/Chronos/commits/v0.1.0</li>
-          </ul>
       </description>
     </release>
   </releases>
