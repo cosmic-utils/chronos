@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>com.github.cosmic_utils.Chronos</id>
+  <id>com.github.cosmic_utils.chronos</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-only</project_license>
   <project_group>COSMIC</project_group>
-  <developer id="com.github.francesco-gaglione">
+  <developer id="com.github.francesco_gaglione">
     <name>Francesco Pio Gaglione</name>
   </developer>
   <update_contact>francesco.gaglione.p@gmail.com</update_contact>
-  <url type="homepage">https://github.com/cosmic-utils/Chronos</url>
-  <url type="bugtracker">https://github.com/cosmic-utils/Chronos/issues</url>
+  <url type="homepage">https://github.com/cosmic-utils/chronos</url>
+  <url type="bugtracker">https://github.com/cosmic-utils/chronos/issues</url>
   <name>Chronos</name>
   <summary>Chronos is a simple and intuitive Pomodoro timer for Linux</summary>
   <description>
     <p>Chronos is a simple and intuitive Pomodoro timer for Linux that helps users manage their time efficiently and effectively, making it easier to focus on tasks and take breaks at regular intervals.</p>
   </description>
-  <launchable type="desktop-id">com.github.cosmic_utils.Chronos.desktop</launchable>
+  <launchable type="desktop-id">com.github.francescp_gaglione.chronos.desktop</launchable>
   <icon type="remote" height="256" width="256">https://raw.githubusercontent.com/cosmic-utils/Chronos/main/res/icons/hicolor/scalable/apps/Chronos.svg</icon>
   <screenshots>
      <screenshot type="default">
@@ -33,7 +33,7 @@
   <content_rating type="oars-1.1" />
   <releases>
    <release version="0.1.0" date="2024-09-30">
-      <url type="details">https://github.com/cosmic-utils/Chronos/releases/tag/v0.1.0</url>
+      <url type="details">https://github.com/cosmic-utils/chronos/releases/tag/v0.1.0</url>
       <description>
         <p>v0.1.0</p>
       </description>

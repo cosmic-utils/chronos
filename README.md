@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/cosmic-utils/Chronos/blob/main/res/icons/hicolor/scalable/apps/com.github.cosmic-utils.Chronos.svg" alt="Logo" width="200px">
+  <img src="https://github.com/cosmic-utils/Chronos/blob/main/res/icons/hicolor/scalable/apps/Chronos.svg" alt="Logo" width="200px">
 </p>
 
 # Chronos
