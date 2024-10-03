@@ -1,6 +1,6 @@
 name := 'chronos'
 appid := 'com.github.francesco_gaglione.chronos'
-version := '0.1.0'
+version := '0.1.1'
 
 rootdir := ''
 prefix := '/usr'
@@ -17,8 +17,8 @@ desktop-dst := clean(rootdir / prefix) / 'share' / 'applications' / desktop
 icons-src := 'res' / 'icons' / 'hicolor'
 icons-dst := clean(rootdir / prefix) / 'share' / 'icons' / 'hicolor'
 
-icon-svg-src := icons-src / 'scalable' / 'apps' / appid + '.svg'
-icon-svg-dst := icons-dst / 'scalable' / 'apps' / appid + '.svg'
+icon-svg-src := icons-src / 'scalable' / 'apps' / 'Chronos.svg'
+icon-svg-dst := icons-dst / 'scalable' / 'apps' / 'Chronos.svg'
 
 # Default recipe which runs `just build-release`
 default: build-release
@@ -72,7 +72,7 @@ package-deb:
     mkdir -p debian/DEBIAN
 
     install -Dm0755 {{bin-src}} debian{{bin-dst}}
-    install -Dm0644 res/{{appid}}.desktop debian{{desktop-dst}}
+    install -Dm0644 res/Chronos.desktop debian{{desktop-dst}}
     install -Dm0644 {{icon-svg-src}} debian{{icon-svg-dst}}
 
     echo "Package: {{name}}" > debian/DEBIAN/control
