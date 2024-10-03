@@ -91,10 +91,14 @@ package-deb:
     mv debian.deb {{name}}_{{version}}_amd64.deb
 
     rm -rf debian
-    
+
 package-flatpak:
-    flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo --install builddir com.francescogaglione.chronos.json
+    flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo --install builddir com.francescogaglione.chronos.json --verbose
     flatpak build-bundle repo com.francescogaglione.chronos.flatpak com.francescogaglione.chronos --runtime-repo=https://github.com/cosmic-utils/chronos
+
+flatpak-lint:
+    flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest com.francescogaglione.chronos.json
+    flatpak run --command=flatpak-builder-lint org.flatpak.Builder repo repo
 
 # Vendor dependencies locally
 vendor:
