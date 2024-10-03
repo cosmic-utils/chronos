@@ -12,6 +12,7 @@ pause-duration = Pause duration
 long-pause-duration = Long pause duration
 pomodoro-before-long-pause = Pomodoro vefore long pause
 pause = Pause
+history = History
 
 // notifications
 pomodoro-started = Pomodoro started

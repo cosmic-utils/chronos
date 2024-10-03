@@ -1,11 +1,16 @@
 use cosmic::{
-    iced::{self, Length},
+    iced::{self, Length, Padding},
     widget::{self, icon},
     Command, Element,
 };
 use notify_rust::Notification;
 
 use crate::{app::Message, config::Config, fl};
+
+enum CompletedItem {
+    Pomodoro(u32),
+    Pause(u32),
+}
 
 #[derive(Debug, Clone)]
 pub enum PomodoroMessage {
@@ -24,6 +29,7 @@ pub struct Pomodoro {
     long_pause_duration: f32,
     pomodoro_completed: u32,
     pomodoro_before_long_pause: u32,
+    history: Vec<CompletedItem>,
 }
 
 impl Default for Pomodoro {
@@ -40,6 +46,7 @@ impl Default for Pomodoro {
             long_pause_duration: config.long_pause_duration as f32,
             pomodoro_completed: 0,
             pomodoro_before_long_pause: config.pomodoro_before_long_pause,
+            history: Vec::new(),
         }
     }
 }
@@ -85,6 +92,7 @@ impl Pomodoro {
                             .on_press(PomodoroMessage::ResetPomodoro)
                     }),
             )
+            .push(self.history_view())
             .align_items(iced::Alignment::Center);
 
         widget::container(col)
@@ -94,10 +102,93 @@ impl Pomodoro {
             .into()
     }
 
+    pub fn history_view<'a>(&'a self) -> Element<'a, PomodoroMessage> {
+        let mut inner_col = widget::column();
+        if self.history.len() > 0 {
+            for item in &self.history {
+                match item {
+                    CompletedItem::Pomodoro(seconds) => {
+                        inner_col = inner_col.push(
+                            widget::row()
+                                .push(
+                                    widget::column()
+                                        .push(widget::text::text(fl!("pomodoro")))
+                                        .width(Length::Fill),
+                                )
+                                .push(
+                                    widget::column()
+                                        .push(widget::text::text(
+                                            self.format_seconds(seconds.clone()),
+                                        ))
+                                        .width(Length::Fill)
+                                        .align_items(iced::Alignment::End),
+                                ),
+                        );
+                    }
+                    CompletedItem::Pause(seconds) => {
+                        inner_col = inner_col.push(
+                            widget::row()
+                                .push(
+                                    widget::column()
+                                        .push(widget::text::text(fl!("pause")))
+                                        .width(Length::Fill),
+                                )
+                                .push(
+                                    widget::column()
+                                        .push(widget::text::text(
+                                            self.format_seconds(seconds.clone()),
+                                        ))
+                                        .width(Length::Fill)
+                                        .align_items(iced::Alignment::End),
+                                ),
+                        );
+                    }
+                }
+                inner_col = inner_col.push(widget::vertical_space(Length::from(5)));
+                inner_col = inner_col.push(widget::divider::horizontal::default());
+                inner_col = inner_col.push(widget::vertical_space(Length::from(5)));
+            }
+        } else {
+            inner_col = inner_col.push(widget::text::text("non ci sono elementi"));
+        }
+
+        widget::column()
+            .push(widget::vertical_space(Length::from(20)))
+            .push(
+                widget::column()
+                    .width(Length::Fixed(350.))
+                    .push(
+                        widget::container(widget::text::text(fl!("history"))).padding(Padding {
+                            top: 0.,
+                            right: 0.,
+                            bottom: 0.,
+                            left: 10.,
+                        }),
+                    )
+                    .push(widget::vertical_space(Length::from(5)))
+                    .push(
+                        widget::container(
+                            widget::column().push(inner_col).padding(Padding::from(10)),
+                        )
+                        .style(cosmic::theme::Container::Card)
+                        .width(Length::Fixed(350.)),
+                    ),
+            )
+            .into()
+    }
+
     fn format_slider_value(&self) -> String {
         let hours = self.slider_value as u32 / 3600;
         let minutes = (self.slider_value as u32 % 3600) / 60;
         let remaining_seconds = self.slider_value as u32 % 60;
+
+        format!("{:02}:{:02}:{:02}", hours, minutes, remaining_seconds)
+    }
+
+    fn format_seconds(&self, seconds: u32) -> String {
+        let hours = seconds / 3600;
+        let minutes = (seconds % 3600) / 60;
+        let remaining_seconds = seconds % 60;
 
         format!("{:02}:{:02}:{:02}", hours, minutes, remaining_seconds)
     }
@@ -111,6 +202,8 @@ impl Pomodoro {
                 if self.slider_value <= 0. {
                     if self.in_action {
                         self.pomodoro_completed += 1;
+                        self.history
+                            .push(CompletedItem::Pomodoro(self.timer_duration as u32 * 60));
                         if self.pomodoro_completed == self.pomodoro_before_long_pause {
                             log::info!("start long pause");
                             let seconds = self.long_pause_duration as u32 * 60;
@@ -126,6 +219,8 @@ impl Pomodoro {
                         self.in_action = false;
                     } else {
                         log::info!("start new pomodoro");
+                        self.history
+                            .push(CompletedItem::Pause(self.slider_max_value as u32));
                         let seconds = self.timer_duration as u32 * 60;
                         self.slider_value = seconds as f32;
                         self.slider_max_value = seconds as f32;
