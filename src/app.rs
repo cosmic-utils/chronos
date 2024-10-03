@@ -14,7 +14,7 @@ use std::time::{Duration, Instant};
 
 const REPOSITORY: &str = "https://github.com/cosmic-utils/Chronos";
 const APP_ICON: &[u8] =
-    include_bytes!("../res/icons/hicolor/scalable/apps/Chronos.svg");
+    include_bytes!("../res/icons/hicolor/scalable/apps/com.francescogaglione.chronos.svg");
 
 /// The application model stores app-specific state used to describe its interface and
 /// drive its logic.

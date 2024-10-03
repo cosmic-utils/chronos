@@ -16,7 +16,8 @@
     <p>Chronos is a simple and intuitive Pomodoro timer for Linux that helps users manage their time efficiently and effectively, making it easier to focus on tasks and take breaks at regular intervals.</p>
   </description>
   <launchable type="desktop-id">com.francescogaglione.chronos.desktop</launchable>
-  <icon type="remote" height="256" width="256">https://raw.githubusercontent.com/cosmic-utils/chronos/main/res/icons/hicolor/scalable/apps/com.francescogaglione.cronos.svg</icon>
+  <icon type="remote" height="256" width="256">https://raw.githubusercontent.com/cosmic-utils/chronos/main/res/icons/hicolor/scalable/apps/com.francescogaglione.chronos.svg</icon>
+  <icon type="stock">com.francescogaglione.chronos.svg</icon>
   <screenshots>
      <screenshot type="default">
        <image>https://raw.githubusercontent.com/cosmic-utils/chronos/main/screenshots/pomodoro-page.png</image>
