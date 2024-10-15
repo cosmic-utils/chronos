@@ -14,6 +14,7 @@ enum CompletedItem {
 
 #[derive(Debug, Clone)]
 pub enum PomodoroMessage {
+    UpdateConfig,
     PomodoroTick,
     StartPomodoro,
     PausePomodoro,
@@ -180,6 +181,9 @@ impl Pomodoro {
     pub fn update(&mut self, message: PomodoroMessage) -> Command<crate::app::Message> {
         let mut commands = Vec::new();
         match message {
+            PomodoroMessage::UpdateConfig => {
+                self.reset_all();
+            }
             PomodoroMessage::PomodoroTick => {
                 self.slider_value -= 1.;
 

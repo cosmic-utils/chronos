@@ -4,7 +4,7 @@ use cosmic::{
     Command, Element,
 };
 
-use crate::{config::Config, fl};
+use crate::{app::Message, config::Config, fl};
 
 #[derive(Debug, Clone)]
 pub enum SettingsMessage {
@@ -209,6 +209,9 @@ impl Settings {
                 );
             }
         }
+        commands.push(Command::perform(async {}, |_| {
+            Message::Pomodoro(super::pomodoro::PomodoroMessage::UpdateConfig)
+        }));
         Command::batch(commands)
     }
 }
