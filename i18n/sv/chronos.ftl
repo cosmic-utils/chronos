@@ -11,7 +11,7 @@ minutes = minuter
 pause-duration = Pauslängd
 long-pause-duration = Lång pauslängd
 pomodoro-before-long-pause = Pomodoro innan lång paus
-pause = Pause
+pause = Pausad
 history = Historik
 
 // underrättelser
