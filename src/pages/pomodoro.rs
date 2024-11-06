@@ -31,6 +31,7 @@ pub struct Pomodoro {
     pomodoro_completed: u32,
     pomodoro_before_long_pause: u32,
     history: Vec<CompletedItem>,
+    notifications_active: bool,
 }
 
 impl Default for Pomodoro {
@@ -48,6 +49,7 @@ impl Default for Pomodoro {
             pomodoro_completed: 0,
             pomodoro_before_long_pause: config.pomodoro_before_long_pause,
             history: Vec::new(),
+            notifications_active: config.notifications_active,
         }
     }
 }
@@ -150,7 +152,7 @@ impl Pomodoro {
                 inner_col = inner_col.push(widget::vertical_space(Length::from(5)));
             }
         } else {
-            inner_col = inner_col.push(widget::text::text("non ci sono elementi"));
+            inner_col = inner_col.push(widget::text::text(fl!("no-elements")));
         }
 
         widget::column()
@@ -232,28 +234,33 @@ impl Pomodoro {
             PomodoroMessage::StartPomodoro => {
                 commands.push(Command::perform(async {}, |_| Message::StartPomodoroTimer));
                 self.in_action = true;
-                let res = Notification::new()
-                    .summary(&fl!("pomodoro-started"))
-                    .body(&fl!("pomodoro-started-des"))
-                    .appname("Chronos")
-                    .show();
-                log::info!("notification result is ok: {:?}", res.is_ok());
+                if self.notifications_active {
+                    let _ = Notification::new()
+                        .summary(&fl!("pomodoro-started"))
+                        .body(&fl!("pomodoro-started-des"))
+                        .appname("Chronos")
+                        .show();
+                }
             }
             PomodoroMessage::PausePomodoro => {
                 commands.push(Command::perform(async {}, |_| Message::PausePomodoroTimer));
-                let _ = Notification::new()
-                    .summary(&fl!("pomodoro-paused"))
-                    .body(&fl!("pomodoro-paused-des"))
-                    .appname("Chronos")
-                    .show();
+                if self.notifications_active {
+                    let _ = Notification::new()
+                        .summary(&fl!("pomodoro-paused"))
+                        .body(&fl!("pomodoro-paused-des"))
+                        .appname("Chronos")
+                        .show();
+                }
                 self.in_action = false;
             }
             PomodoroMessage::ResetPomodoro => {
-                let _ = Notification::new()
-                    .summary(&fl!("pomodoro-stopped"))
-                    .body(&fl!("pomodoro-stopped-des"))
-                    .appname("Chronos")
-                    .show();
+                if self.notifications_active {
+                    let _ = Notification::new()
+                        .summary(&fl!("pomodoro-stopped"))
+                        .body(&fl!("pomodoro-stopped-des"))
+                        .appname("Chronos")
+                        .show();
+                }
                 self.reset_all();
             }
         }
@@ -272,6 +279,7 @@ impl Pomodoro {
         self.pomodoro_completed = 0;
         self.pomodoro_before_long_pause = config.pomodoro_before_long_pause;
         self.history = Vec::new();
+        self.notifications_active = config.notifications_active;
     }
 
     fn format_slider_value(&self) -> String {

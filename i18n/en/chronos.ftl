@@ -13,8 +13,11 @@ long-pause-duration = Long pause duration
 pomodoro-before-long-pause = Pomodoro before long pause
 pause = Pause
 history = History
+no-elements = No elements in this list
 
 // notifications
+notifications = Notifications
+activate-notification = Activate system notifications
 pomodoro-started = Pomodoro started
 pomodoro-started-des = Your pomodoro session started
 pomodoro-paused = Pomodoro paused

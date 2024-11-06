@@ -16,7 +16,8 @@ pub struct Config {
     pub timer_duration: u32,
     pub pause_duration: u32,
     pub long_pause_duration: u32,
-    pub pomodoro_before_long_pause: u32
+    pub pomodoro_before_long_pause: u32,
+    pub notifications_active: bool,
 }
 
 impl Default for Config {
@@ -25,7 +26,8 @@ impl Default for Config {
             timer_duration: 25,
             pause_duration: 5,
             long_pause_duration: 15,
-            pomodoro_before_long_pause: 4
+            pomodoro_before_long_pause: 4,
+            notifications_active: false,
         }
     }
 }
