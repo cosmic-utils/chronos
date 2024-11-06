@@ -12,6 +12,7 @@ pub enum SettingsMessage {
     PauseDurationChanged(f32),
     LongPauseDurationChanged(f32),
     PomodoroBeforeLongPauseChanged(spin_button::Message),
+    NotificationToggle(bool),
 }
 
 pub struct Settings {
@@ -20,6 +21,7 @@ pub struct Settings {
     long_pause_duration: f32,
     pomodoro_before_long_pause_str: String,
     pomodoro_before_long_pause: u32,
+    notification_active: bool,
 }
 
 impl Default for Settings {
@@ -32,6 +34,7 @@ impl Default for Settings {
             long_pause_duration: config.long_pause_duration as f32,
             pomodoro_before_long_pause: config.pomodoro_before_long_pause,
             pomodoro_before_long_pause_str: config.pomodoro_before_long_pause.to_string(),
+            notification_active: config.notifications_active,
         }
     }
 }
@@ -161,6 +164,19 @@ impl Settings {
             )
             .push(widget::vertical_space(Length::from(20)));
 
+        element = element.push(
+            widget::settings::section().title(fl!("notifications")).add(
+                widget::column()
+                    .width(Length::Fill)
+                    .push(widget::text::text(fl!("activate-notification")))
+                    .push(widget::toggler(
+                        None,
+                        self.notification_active,
+                        SettingsMessage::NotificationToggle,
+                    )),
+            ),
+        );
+
         element.into()
     }
 
@@ -170,21 +186,21 @@ impl Settings {
             SettingsMessage::TimerDurationChanged(value) => {
                 self.timer_duration_value = value;
                 let mut config = Config::load();
-                config
+                let _ = config
                     .1
                     .set_timer_duration(&config.0.unwrap(), self.timer_duration_value as u32);
             }
             SettingsMessage::PauseDurationChanged(value) => {
                 self.pause_duration = value;
                 let mut config = Config::load();
-                config
+                let _ = config
                     .1
                     .set_pause_duration(&config.0.unwrap(), self.pause_duration as u32);
             }
             SettingsMessage::LongPauseDurationChanged(value) => {
                 self.long_pause_duration = value;
                 let mut config = Config::load();
-                config
+                let _ = config
                     .1
                     .set_long_pause_duration(&config.0.unwrap(), self.long_pause_duration as u32);
             }
@@ -203,10 +219,15 @@ impl Settings {
                 }
                 self.pomodoro_before_long_pause_str = self.pomodoro_before_long_pause.to_string();
                 let mut config = Config::load();
-                config.1.set_pomodoro_before_long_pause(
+                let _ = config.1.set_pomodoro_before_long_pause(
                     &config.0.unwrap(),
                     self.pomodoro_before_long_pause as u32,
                 );
+            }
+            SettingsMessage::NotificationToggle(value) => {
+                self.notification_active = value;
+                let mut config = Config::load();
+                let _ = config.1.set_notifications_active(&config.0.unwrap(), value);
             }
         }
         commands.push(Command::perform(async {}, |_| {
