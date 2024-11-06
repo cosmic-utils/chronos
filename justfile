@@ -1,6 +1,6 @@
 name := 'chronos'
 appid := 'com.francescogaglione.chronos'
-version := '0.1.3'
+version := '0.1.4'
 
 rootdir := ''
 prefix := '/usr'
