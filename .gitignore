@@ -16,3 +16,4 @@ debian/*
 .flatpak-builder
 build-dir
 repo
+.idea

@@ -3,10 +3,12 @@
 use crate::config::Config;
 use crate::core::nav::NavPage;
 use crate::{fl, pages};
-use cosmic::app::{Command, Core};
+use cosmic::app::context_drawer;
+use cosmic::app::{Core, Task};
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
 use cosmic::iced::time;
 use cosmic::iced::{Alignment, Length, Subscription};
+use cosmic::widget::about::About;
 use cosmic::widget::{self, menu, nav_bar};
 use cosmic::{cosmic_theme, theme, Application, ApplicationExt, Element};
 use std::collections::HashMap;
@@ -29,6 +31,7 @@ pub struct AppModel {
     key_binds: HashMap<menu::KeyBind, MenuAction>,
     // Configuration data that persists between application runs.
     config: Config,
+    about: About,
 
     pub pomodoro: pages::pomodoro::Pomodoro,
     pub settings: pages::settings::Settings,
@@ -41,7 +44,8 @@ pub struct AppModel {
 pub enum Message {
     OpenRepositoryUrl,
     SubscriptionChannel,
-    ToggleContextPage(ContextPage),
+    ToggleContextPage,
+    Open(String),
     UpdateConfig(Config),
 
     // pages
@@ -85,7 +89,7 @@ impl Application for AppModel {
     }
 
     /// Initializes the application with any given flags and startup commands.
-    fn init(core: Core, _flags: Self::Flags) -> (Self, Command<Self::Message>) {
+    fn init(core: Core, _flags: Self::Flags) -> (Self, Task<Self::Message>) {
         // Create a nav bar with three page items.
         let mut nav = nav_bar::Model::default();
 
@@ -101,6 +105,21 @@ impl Application for AppModel {
                 nav.activate(id);
             }
         }
+
+        let about = About::default()
+            .name(fl!("app-title"))
+            .icon(Self::APP_ID)
+            .version("0.1.4")
+            .author("Francesco Pio Gaglione")
+            .license("GPL-3.0-only")
+            .links([
+                (
+                    fl!("support"),
+                    "https://github.com/cosmic-utils/chronos/issues",
+                ),
+                (fl!("repository"), "https://github.com/cosmic-utils/chronos"),
+            ])
+            .developers([("Francesco Pio Gaglione", "francesco.gaglione.p@gmail.com")]);
 
         // Construct the app model with the runtime's core.
         let mut app = AppModel {
@@ -121,6 +140,7 @@ impl Application for AppModel {
                     }
                 })
                 .unwrap_or_default(),
+            about,
             pomodoro: pages::pomodoro::Pomodoro::default(),
             settings: pages::settings::Settings::default(),
             pomodoro_tick_state: PomodoroTickState::Idle,
@@ -138,7 +158,7 @@ impl Application for AppModel {
             menu::root(fl!("view")),
             menu::items(
                 &self.key_binds,
-                vec![menu::Item::Button(fl!("about"), MenuAction::About)],
+                vec![menu::Item::Button(fl!("about"), None, MenuAction::About)],
             ),
         )]);
 
@@ -151,13 +171,15 @@ impl Application for AppModel {
     }
 
     /// Display a context drawer if the context page is requested.
-    fn context_drawer(&self) -> Option<Element<Self::Message>> {
+    fn context_drawer(&self) -> Option<context_drawer::ContextDrawer<Self::Message>> {
         if !self.core.window.show_context {
             return None;
         }
 
         Some(match self.context_page {
-            ContextPage::About => self.about(),
+            ContextPage::About => {
+                context_drawer::about(&self.about, Message::Open, Message::ToggleContextPage)
+            }
         })
     }
 
@@ -174,7 +196,7 @@ impl Application for AppModel {
             .padding(spacing.space_xs)
             .width(Length::Fill)
             .height(Length::Fill)
-            .align_items(Alignment::Center)
+            .align_x(Alignment::Center)
             .into()
     }
 
@@ -197,7 +219,7 @@ impl Application for AppModel {
     ///
     /// Commands may be returned for asynchronous execution of code in the background
     /// on the application's async runtime.
-    fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
+    fn update(&mut self, message: Self::Message) -> Task<Self::Message> {
         let mut commands = vec![];
         match message {
             Message::OpenRepositoryUrl => {
@@ -208,18 +230,8 @@ impl Application for AppModel {
                 // For example purposes only.
             }
 
-            Message::ToggleContextPage(context_page) => {
-                if self.context_page == context_page {
-                    // Close the context drawer if the toggled context page is the same.
-                    self.core.window.show_context = !self.core.window.show_context;
-                } else {
-                    // Open the context drawer to display the requested context page.
-                    self.context_page = context_page;
-                    self.core.window.show_context = true;
-                }
-
-                // Set the title of the context drawer.
-                self.set_context_title(context_page.title());
+            Message::ToggleContextPage => {
+                self.core.window.show_context = !self.core.window.show_context;
             }
 
             Message::UpdateConfig(config) => {
@@ -250,12 +262,17 @@ impl Application for AppModel {
             Message::PausePomodoroTimer => {
                 self.pomodoro_tick_state = PomodoroTickState::Idle;
             }
+            Message::Open(url) => {
+                if let Err(err) = open::that_detached(url) {
+                    log::error!("{err}")
+                }
+            }
         }
-        Command::batch(commands)
+        Task::batch(commands)
     }
 
     /// Called when a nav item is selected.
-    fn on_nav_select(&mut self, id: nav_bar::Id) -> Command<Self::Message> {
+    fn on_nav_select(&mut self, id: nav_bar::Id) -> Task<Self::Message> {
         // Activate the page in the model.
         self.nav.activate(id);
 
@@ -264,29 +281,8 @@ impl Application for AppModel {
 }
 
 impl AppModel {
-    /// The about page for this app.
-    pub fn about(&self) -> Element<Message> {
-        let cosmic_theme::Spacing { space_xxs, .. } = theme::active().cosmic().spacing;
-
-        let icon = widget::svg(widget::svg::Handle::from_memory(APP_ICON));
-
-        let title = widget::text::title3(fl!("app-title"));
-
-        let link = widget::button::link(REPOSITORY)
-            .on_press(Message::OpenRepositoryUrl)
-            .padding(0);
-
-        widget::column()
-            .push(icon)
-            .push(title)
-            .push(link)
-            .align_items(Alignment::Center)
-            .spacing(space_xxs)
-            .into()
-    }
-
     /// Updates the header and window titles.
-    pub fn update_title(&mut self) -> Command<Message> {
+    pub fn update_title(&mut self) -> Task<Message> {
         let mut window_title = fl!("app-title");
 
         if let Some(page) = self.nav.text(self.nav.active()) {
@@ -323,7 +319,7 @@ impl menu::action::MenuAction for MenuAction {
 
     fn message(&self) -> Self::Message {
         match self {
-            MenuAction::About => Message::ToggleContextPage(ContextPage::About),
+            MenuAction::About => Message::ToggleContextPage,
         }
     }
 }

@@ -1,17 +1,17 @@
+use crate::{app::Message, config::Config, fl};
+use cosmic::iced_core::alignment::Horizontal;
 use cosmic::{
     iced::{self, Length},
-    widget::{self, spin_button},
-    Command, Element,
+    widget::{self},
+    Element, Task,
 };
-
-use crate::{app::Message, config::Config, fl};
 
 #[derive(Debug, Clone)]
 pub enum SettingsMessage {
     TimerDurationChanged(f32),
     PauseDurationChanged(f32),
     LongPauseDurationChanged(f32),
-    PomodoroBeforeLongPauseChanged(spin_button::Message),
+    PomodoroBeforeLongPauseChanged(u32),
     NotificationToggle(bool),
 }
 
@@ -46,9 +46,9 @@ impl Settings {
         col = col.push(self.timer_view());
 
         widget::container(col)
-            .width(iced::Length::Fill)
-            .height(iced::Length::Shrink)
-            .center_y()
+            .width(Length::Fill)
+            .height(Length::Shrink)
+            .align_x(Horizontal::Center)
             .into()
     }
 
@@ -74,7 +74,7 @@ impl Settings {
                                             fl!("minutes")
                                         )))
                                         .width(Length::Fill)
-                                        .align_items(iced::Alignment::End),
+                                        .align_x(iced::Alignment::End),
                                 ),
                         )
                         .push(
@@ -87,7 +87,7 @@ impl Settings {
                             .height(38),
                         )
                         .push(widget::divider::horizontal::default())
-                        .push(widget::vertical_space(Length::from(10)))
+                        .push(widget::Space::with_height(10))
                         .push(
                             widget::row()
                                 .push(
@@ -103,7 +103,7 @@ impl Settings {
                                             fl!("minutes")
                                         )))
                                         .width(Length::Fill)
-                                        .align_items(iced::Alignment::End),
+                                        .align_x(iced::Alignment::End),
                                 ),
                         )
                         .push(
@@ -115,7 +115,7 @@ impl Settings {
                             .width(Length::Fill)
                             .height(38),
                         )
-                        .push(widget::vertical_space(Length::from(10)))
+                        .push(widget::Space::with_height(10))
                         .push(
                             widget::row()
                                 .push(
@@ -131,7 +131,7 @@ impl Settings {
                                             fl!("minutes")
                                         )))
                                         .width(Length::Fill)
-                                        .align_items(iced::Alignment::End),
+                                        .align_x(iced::Alignment::End),
                                 ),
                         )
                         .push(
@@ -153,34 +153,37 @@ impl Settings {
                                 .push(
                                     widget::column()
                                         .push(widget::spin_button(
-                                            &self.pomodoro_before_long_pause_str,
+                                            self.pomodoro_before_long_pause_str.clone(),
+                                            self.pomodoro_before_long_pause,
+                                            1,
+                                            0,
+                                            100,
                                             SettingsMessage::PomodoroBeforeLongPauseChanged,
                                         ))
                                         .width(Length::Fill)
-                                        .align_items(iced::Alignment::End),
+                                        .align_x(iced::Alignment::End),
                                 ),
                         ),
                 ),
             )
-            .push(widget::vertical_space(Length::from(20)));
+            .push(widget::Space::with_height(20));
 
         element = element.push(
             widget::settings::section().title(fl!("notifications")).add(
                 widget::column()
                     .width(Length::Fill)
                     .push(widget::text::text(fl!("activate-notification")))
-                    .push(widget::toggler(
-                        None,
-                        self.notification_active,
-                        SettingsMessage::NotificationToggle,
-                    )),
+                    .push(
+                        widget::toggler(self.notification_active)
+                            .on_toggle(SettingsMessage::NotificationToggle),
+                    ),
             ),
         );
 
         element.into()
     }
 
-    pub fn update(&mut self, message: SettingsMessage) -> Command<crate::app::Message> {
+    pub fn update(&mut self, message: SettingsMessage) -> Task<crate::app::Message> {
         let mut commands = Vec::new();
         match message {
             SettingsMessage::TimerDurationChanged(value) => {
@@ -205,18 +208,7 @@ impl Settings {
                     .set_long_pause_duration(&config.0.unwrap(), self.long_pause_duration as u32);
             }
             SettingsMessage::PomodoroBeforeLongPauseChanged(message) => {
-                match message {
-                    spin_button::Message::Increment => {
-                        if self.pomodoro_before_long_pause < 15 {
-                            self.pomodoro_before_long_pause += 1;
-                        }
-                    }
-                    spin_button::Message::Decrement => {
-                        if self.pomodoro_before_long_pause > 0 {
-                            self.pomodoro_before_long_pause -= 1;
-                        }
-                    }
-                }
+                self.pomodoro_before_long_pause = message.clone();
                 self.pomodoro_before_long_pause_str = self.pomodoro_before_long_pause.to_string();
                 let mut config = Config::load();
                 let _ = config.1.set_pomodoro_before_long_pause(
@@ -230,9 +222,9 @@ impl Settings {
                 let _ = config.1.set_notifications_active(&config.0.unwrap(), value);
             }
         }
-        commands.push(Command::perform(async {}, |_| {
+        commands.push(Task::perform(async {}, |_| {
             Message::Pomodoro(super::pomodoro::PomodoroMessage::UpdateConfig)
         }));
-        Command::batch(commands)
+        Task::batch(commands)
     }
 }
