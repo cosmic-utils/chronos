@@ -1,6 +1,8 @@
 app-title = Chronos
 about = About
 view = View
+support = Support
+repository = Repository
 
 pomodoro = Pomodoro
 

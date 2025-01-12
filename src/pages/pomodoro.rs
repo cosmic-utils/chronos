@@ -1,7 +1,8 @@
+use cosmic::iced::Alignment;
 use cosmic::{
     iced::{self, Length, Padding},
     widget::{self, icon},
-    Command, Element,
+    Element, Task,
 };
 use notify_rust::Notification;
 
@@ -64,20 +65,20 @@ impl Pomodoro {
                     fl!("pause")
                 })
                 .width(Length::Fill)
-                .horizontal_alignment(iced::alignment::Horizontal::Center),
+                .align_x(iced::alignment::Horizontal::Center),
             )
             .push(
                 widget::text::title1(self.format_slider_value())
                     .width(Length::Fill)
-                    .horizontal_alignment(iced::alignment::Horizontal::Center),
+                    .align_x(iced::alignment::Horizontal::Center),
             )
-            .push(widget::vertical_space(Length::from(10)))
+            .push(widget::Space::with_height(10))
             .push(
                 widget::progress_bar(0.0..=self.slider_max_value, self.slider_value)
                     .width(Length::Fixed(250.0))
                     .height(Length::Fixed(4.0)),
             )
-            .push(widget::vertical_space(Length::from(10)))
+            .push(widget::Space::with_height(10))
             .push(
                 widget::row()
                     .push(
@@ -96,12 +97,12 @@ impl Pomodoro {
                     }),
             )
             .push(self.history_view())
-            .align_items(iced::Alignment::Center);
+            .align_x(Alignment::Center);
 
         widget::container(col)
-            .width(iced::Length::Fill)
-            .height(iced::Length::Fill)
-            .center_y()
+            .width(Length::Fill)
+            .height(Length::Fill)
+            .align_x(Alignment::Center)
             .into()
     }
 
@@ -124,7 +125,7 @@ impl Pomodoro {
                                             self.format_seconds(seconds.clone()),
                                         ))
                                         .width(Length::Fill)
-                                        .align_items(iced::Alignment::End),
+                                        .align_x(Alignment::End),
                                 ),
                         );
                     }
@@ -142,21 +143,21 @@ impl Pomodoro {
                                             self.format_seconds(seconds.clone()),
                                         ))
                                         .width(Length::Fill)
-                                        .align_items(iced::Alignment::End),
+                                        .align_x(Alignment::End),
                                 ),
                         );
                     }
                 }
-                inner_col = inner_col.push(widget::vertical_space(Length::from(5)));
+                inner_col = inner_col.push(widget::Space::with_height(5));
                 inner_col = inner_col.push(widget::divider::horizontal::default());
-                inner_col = inner_col.push(widget::vertical_space(Length::from(5)));
+                inner_col = inner_col.push(widget::Space::with_height(5));
             }
         } else {
             inner_col = inner_col.push(widget::text::text(fl!("no-elements")));
         }
 
         widget::column()
-            .push(widget::vertical_space(Length::from(20)))
+            .push(widget::Space::with_height(20))
             .push(
                 widget::column()
                     .width(Length::Fixed(350.))
@@ -168,19 +169,19 @@ impl Pomodoro {
                             left: 10.,
                         }),
                     )
-                    .push(widget::vertical_space(Length::from(5)))
+                    .push(widget::Space::with_height(5))
                     .push(
                         widget::container(
                             widget::column().push(inner_col).padding(Padding::from(10)),
                         )
-                        .style(cosmic::theme::Container::Card)
+                        .class(cosmic::theme::Container::Card)
                         .width(Length::Fixed(350.)),
                     ),
             )
             .into()
     }
 
-    pub fn update(&mut self, message: PomodoroMessage) -> Command<crate::app::Message> {
+    pub fn update(&mut self, message: PomodoroMessage) -> Task<crate::app::Message> {
         let mut commands = Vec::new();
         match message {
             PomodoroMessage::UpdateConfig => {
@@ -232,7 +233,7 @@ impl Pomodoro {
                 }
             }
             PomodoroMessage::StartPomodoro => {
-                commands.push(Command::perform(async {}, |_| Message::StartPomodoroTimer));
+                commands.push(Task::perform(async {}, |_| Message::StartPomodoroTimer));
                 self.in_action = true;
                 if self.notifications_active {
                     let _ = Notification::new()
@@ -243,7 +244,7 @@ impl Pomodoro {
                 }
             }
             PomodoroMessage::PausePomodoro => {
-                commands.push(Command::perform(async {}, |_| Message::PausePomodoroTimer));
+                commands.push(Task::perform(async {}, |_| Message::PausePomodoroTimer));
                 if self.notifications_active {
                     let _ = Notification::new()
                         .summary(&fl!("pomodoro-paused"))
@@ -264,7 +265,7 @@ impl Pomodoro {
                 self.reset_all();
             }
         }
-        Command::batch(commands)
+        Task::batch(commands)
     }
 
     fn reset_all(&mut self) {
