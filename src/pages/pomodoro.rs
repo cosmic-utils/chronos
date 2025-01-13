@@ -103,6 +103,7 @@ impl Pomodoro {
             .width(Length::Fill)
             .height(Length::Fill)
             .align_x(Alignment::Center)
+            .align_y(Alignment::Center)
             .into()
     }
 
