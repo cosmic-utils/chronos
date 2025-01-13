@@ -92,6 +92,17 @@ package-deb:
 
     rm -rf debian
 
+sources-gen:
+  python3 flatpak-cargo-generator.py ./Cargo.lock -o cargo-sources.json
+
+install-sdk:
+  flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
+  flatpak install --noninteractive --user flathub \
+    org.freedesktop.Platform//24.08 \
+    org.freedesktop.Sdk//24.08 \
+    org.freedesktop.Sdk.Extension.rust-stable//24.08 \
+    org.freedesktop.Sdk.Extension.llvm18//24.08
+
 package-flatpak:
     flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo --install builddir com.francescogaglione.chronos.json --verbose
     flatpak build-bundle repo com.francescogaglione.chronos.flatpak com.francescogaglione.chronos --runtime-repo=https://github.com/cosmic-utils/chronos
