@@ -78,4 +78,4 @@ Contributions are welcome! If you’d like to contribute to the project, please 
 
 ## License
 
-Distributed under the **MIT** license. See the [LICENSE](./LICENSE) file for more details.
+Distributed under the **GPL-3.0** license. See the [LICENSE](./LICENSE) file for more details.
