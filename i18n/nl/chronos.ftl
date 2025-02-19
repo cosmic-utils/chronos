@@ -1,7 +1,7 @@
 app-title = Chronos
 about = Over
 view = Beeld
-support = Ondersteuning
+support = Doneren
 repository = Repository
 
 pomodoro = Pomodoro
@@ -21,8 +21,8 @@ no-elements = Geen elementen in deze lijst
 notifications = Meldingen
 activate-notification = Systeemmeldingen activeren
 pomodoro-started = Pomodoro gestard
-pomodoro-started-des = Je pomodoro-sessie is begonnen
+pomodoro-started-des = Uw pomodoro-sessie is begonnen
 pomodoro-paused = Pomodoro gepauzeerd
-pomodoro-paused-des = Je pomodoro-session is gepauzeerd
+pomodoro-paused-des = Uw pomodoro-session is gepauzeerd
 pomodoro-stopped = Pomodoro gestopt
 pomodoro-stopped-des = Pomodoro is gestopt en gereset
