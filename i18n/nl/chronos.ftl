@@ -1,7 +1,7 @@
 app-title = Chronos
 about = Over
 view = Beeld
-support = Doneren
+support = Ondersteuning
 repository = Repository
 
 pomodoro = Pomodoro
