@@ -8,11 +8,11 @@ pomodoro = Pomodoro
 
 settings = Instellingen
 timer = Timer
-timer-duration = Pomodoro-interval
+timer-duration = Pomodoro-lengte
 minutes = minuten
-pause-duration = Interval korte pauze
-long-pause-duration = Interval lange pauze
-pomodoro-before-long-pause = Pomodoro-interval vóór een lange pauze
+pause-duration = Lengte korte pauze
+long-pause-duration = Lengte lange pauze
+pomodoro-before-long-pause = Pomodoro-lengte vóór een lange pauze
 pause = Pauze
 history = Geschiedenis
 no-elements = Geen elementen in deze lijst
